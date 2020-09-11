@@ -146,3 +146,13 @@ class TestDBStorageMethod(unittest.TestCase):
         """ test """
         answ = models.storage.count(Review)
         self.assertEqual(answ, 0)
+
+    def test_count_db_storage(self):
+        """Test"""
+        storage.reload()
+        result = storage.all("")
+        count = storage.count(None)
+        self.assertEqual(len(result), count)
+        result = storage.all("State")
+        count = storage.count("State")
+        self.assertEqual(len(result), count)
