@@ -147,6 +147,7 @@ class TestDBStorageMethod(unittest.TestCase):
         answ = models.storage.count(Review)
         self.assertEqual(answ, 0)
 
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count_db_storage(self):
         """Test"""
         storage.reload()
