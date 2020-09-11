@@ -130,3 +130,49 @@ class TestFileStorage(unittest.TestCase):
         new_state.save()
         my_new_count = storage.count(State)
         self.assertTrue((my_initial_count + 1) == my_new_count)
+
+
+class TestFileStorageMethods(unittest.TestCase):
+    """ test the data base storage """
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    @classmethod
+    def setUpClass(cls):
+        """ test """
+        cls.object_state = State(name="California")
+        cls.object_city = City(state_id=cls.object_state.id,
+                               name="Los Angeles")
+        cls.object_state.save()
+        cls.object_city.save()
+
+    @classmethod
+    def tearDownClass(cls):
+        """ test """
+        try:
+            os.remove('file.json')
+        except Exception:
+            pass
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def test_get(self):
+        """ test """
+        first_state_id = list(models.storage.all(State).values())[0].id
+        answ = models.storage.get(State, first_state_id)
+        self.assertEqual(answ.__class__.__name__, "State")
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def count_all(self):
+        """ test """
+        answ = models.storage.count()
+        self.assertEqual(answ, 2)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def count_cls(self):
+        """ test """
+        answ = models.storage.count(State)
+        self.assertEqual(answ, 1)
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing db storage")
+    def count_none_cls(self):
+        """ test """
+        answ = models.storage.count(Review)
+        self.assertEqual(answ, 0)

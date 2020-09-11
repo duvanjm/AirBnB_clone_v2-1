@@ -102,3 +102,47 @@ class TestFileStorage(unittest.TestCase):
         new_state.save()
         my_new_count = storage.count(State)
         self.assertTrue((my_initial_count + 1) == my_new_count)
+
+
+class TestDBStorageMethod(unittest.TestCase):
+    """Test the DBStorage class methods"""
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    @classmethod
+    def setUpClass(cls):
+        """Creating the objects to use"""
+        cls.object_state = State(name="California")
+        cls.object_city = City(state_id=cls.object_state.id,
+                               name="Los Angeles")
+        cls.object_state.save()
+        cls.object_city.save()
+
+    @classmethod
+    def tearDownClass(cls):
+        """ test """
+        models.storage.delete(cls.object_state)
+        models.storage.delete(cls.object_city)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """ test the get method for an existing object of class cls  """
+        first_state_id = list(models.storage.all(State).values())[0].id
+        answ = models.storage.get(State, first_state_id)
+        self.assertEqual(answ.__class__.__name__, "State")
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_all(self):
+        """ test """
+        answ = models.storage.count()
+        self.assertEqual(answ, 2)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_cls(self):
+        """ test """
+        answ = models.storage.count(State)
+        self.assertEqual(answ, 1)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count_None_cls(self):
+        """ test """
+        answ = models.storage.count(Review)
+        self.assertEqual(answ, 0)
