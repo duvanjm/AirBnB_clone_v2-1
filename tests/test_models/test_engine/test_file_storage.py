@@ -196,3 +196,7 @@ class TestFileStorageMethods(unittest.TestCase):
         fs.new(new_state)
         first_state_id = list(storage.all("State").values())[0].id
         self.assertEqual(type(storage.get("State", first_state_id)), State)
+
+    def test_count(self):
+        """ test """
+        pass

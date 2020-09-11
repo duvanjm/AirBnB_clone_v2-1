@@ -166,3 +166,15 @@ class TestDBStorageMethod(unittest.TestCase):
         fs.new(new_state)
         first_state_id = list(storage.all("State").values())[0].id
         self.assertEqual(type(storage.get("State", first_state_id)), State)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count(self):
+        storage = FileStorage()
+        length = len(storage.all())
+        self.assertEqual(storage.count(), length)
+        state_len = len(storage.all("State"))
+        self.assertEqual(storage.count("State"), state_len)
+        new_state = State()
+        new_state.save()
+        self.assertEqual(storage.count(), length + 1)
+        self.assertEqual(storage.count("State"), state_len + 1)
